@@ -1,32 +1,21 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/lib/db";
+import { updateResource, deleteResource } from "@/lib/resourceService";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  try {
-    const client = await clientPromise;
-    const db = client.db("resourcemanager");
-    const data = await request.json();
-    await db.collection("resources").updateOne(
-      { _id: new (await import("mongodb")).ObjectId(params.id) },
-      { $set: data }
-    );
-    return NextResponse.json({ message: "Resource updated" });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to update resource" }, { status: 500 });
-  }
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+  const data = await req.json();
+  await updateResource(id, data);
+  return NextResponse.json({ message: "Resource updated" });
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  try {
-    const client = await clientPromise;
-    const db = client.db("resourcemanager");
-    await db.collection("resources").deleteOne(
-      { _id: new (await import("mongodb")).ObjectId(params.id) }
-    );
-    return NextResponse.json({ message: "Resource deleted" });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to delete resource" }, { status: 500 });
-  }
+export async function DELETE(
+  _req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+  await deleteResource(id);
+  return NextResponse.json({ message: "Resource deleted" });
 }

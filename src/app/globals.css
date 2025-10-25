@@ -1,29 +1,16 @@
-/* src/app/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --bg-light: #f9fafb;
-  /* off‑white gray */
-  --text-light: #1e293b;
-  /* slate dark text */
-  --border-light: #cbd5e1;
-
-  --bg-dark: #0d1117;
-  --text-dark: #e6edf3;
-  --border-dark: #444c56;
-}
+/* Enable class-based dark mode for Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
 
 body {
-  background-color: var(--bg-light);
-  color: var(--text-light);
   font-family: system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  transition: background-color .3s ease, color .3s ease;
 }
 
-.dark body {
-  background-color: var(--bg-dark);
-  color: var(--text-dark);
+/* Smooth transitions for theme changes */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
 }
